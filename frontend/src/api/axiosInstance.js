@@ -1,10 +1,9 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080/api', // Spring Boot backend එකේ base URL එක
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
 });
 
-// හැම request එකකටම automatic විදිහට token එක add කරනවා
 axiosInstance.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');
     if (token) {

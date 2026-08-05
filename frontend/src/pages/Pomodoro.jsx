@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 import { startSession, endSession } from '../api/pomodoroApi';
 
 const WORK_MINUTES = 25;
-const SHORT_BREAK_MINUTES = 25;
+const SHORT_BREAK_MINUTES = 5;
 const LONG_BREAK_MINUTES = 15;
 const SESSIONS_BEFORE_LONG_BREAK = 4;
 

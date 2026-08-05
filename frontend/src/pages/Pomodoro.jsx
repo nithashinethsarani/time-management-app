@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import Navbar from '../components/Navbar';
 import { startSession, endSession } from '../api/pomodoroApi';
 
-const WORK_MINUTES = 0.5;
-const SHORT_BREAK_MINUTES = 0.5;
-const LONG_BREAK_MINUTES = 0.5;
+const WORK_MINUTES = 25;
+const SHORT_BREAK_MINUTES = 25;
+const LONG_BREAK_MINUTES = 15;
 const SESSIONS_BEFORE_LONG_BREAK = 4;
 
 function Pomodoro() {

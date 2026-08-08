@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { getMySchedules } from '../api/scheduleApi';
 import { getMySessions } from '../api/pomodoroApi';
+import { getCurrentUser } from '../api/userApi';
 import { useNotification } from '../context/NotificationContext';
 
 const DAY_MAP = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
@@ -12,15 +13,15 @@ function Dashboard() {
     const [completedPomodoros, setCompletedPomodoros] = useState(0);
     const [totalFocusMinutes, setTotalFocusMinutes] = useState(0);
     const [todaySchedules, setTodaySchedules] = useState([]);
+    const [emailVerified, setEmailVerified] = useState(true); // default true, load වෙනකම් banner පෙන්නන්නේ නෑ
 
     const { permission, requestPermission, sendNotification } = useNotification();
-    const notifiedRef = useRef(new Set()); // දැනටමත් notify කරපු schedule IDs ටික, duplicate notifications වළක්වගන්න
+    const notifiedRef = useRef(new Set());
 
     useEffect(() => {
         loadStats();
     }, []);
 
-    // හැම 30 seconds කටම, schedules check කරලා, reminder time එකට ළඟදී ආවොත් notify කරනවා
     useEffect(() => {
         const interval = setInterval(() => {
             checkSchedulesForReminders();
@@ -69,6 +70,9 @@ function Dashboard() {
 
             const totalMinutes = completed.reduce((sum, s) => sum + s.plannedDurationMinutes, 0);
             setTotalFocusMinutes(totalMinutes);
+
+            const user = await getCurrentUser();
+            setEmailVerified(user.emailVerified);
         } catch (err) {
             console.error('Failed to load stats', err);
         }
@@ -111,7 +115,14 @@ function Dashboard() {
                 <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2">Welcome back 👋</h1>
                 <p className="text-lg text-gray-500 dark:text-gray-400 mb-6">Welcome to your time management dashboard</p>
 
-                {/* Notification Permission Banner */}
+                {!emailVerified && (
+                    <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 mb-4">
+                        <p className="text-sm text-amber-800 dark:text-amber-300">
+                            📧 Please verify your email address. Check your inbox for a verification link.
+                        </p>
+                    </div>
+                )}
+
                 {permission === 'default' && (
                     <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 mb-8 flex items-center justify-between">
                         <div className="flex items-center gap-3">

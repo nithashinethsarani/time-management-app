@@ -4,30 +4,26 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(name = "verification_tokens")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class VerificationToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
     @Column(nullable = false, unique = true)
-    private String email;
+    private String token;
 
     @Column(nullable = false)
-    @com.fasterxml.jackson.annotation.JsonIgnore
-    private String password;
+    private LocalDateTime expiryDate;
 
-    @Column(nullable = false)
-    private Boolean emailVerified = false;
-
-
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }
